@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/mvc
+         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<mvc:annotation-driven />
+	<context:component-scan base-package="io.github.howiefh.controller">
+	</context:component-scan>
+
+	<mvc:resources location="/resources/" mapping="/resources/**" />
+	
+	<bean id="freemarkerConfiguration"  
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean">  
+        <property name="location" value="classpath:freemarker.properties" />  
+    </bean>  
+
+	<bean id="freemarkerConfig"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="freemarkerSettings" ref="freemarkerConfiguration"></property>
+		<property name="templateLoaderPath" value="/WEB-INF/ftl/" />
+	</bean>
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="cache" value="true" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".ftl" />
+		<property name="contentType" value="text/html; charset=UTF-8"></property>
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="mediaTypes">
+			<map>
+				<entry key="json" value="application/json" />
+				<entry key="xml" value="text/xml" />
+				<entry key="htm" value="text/html" />
+			</map>
+		</property>
+		<property name="defaultContentType" value="text/html" />
+	</bean>
+</beans>

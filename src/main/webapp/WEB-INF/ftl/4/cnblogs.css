@@ -1,0 +1,44 @@
+#home{
+  width: 100%;
+  font-family: "Microsoft Yahei",Tahoma, Helvetica, Arial, "SimSun", sans-serif;
+  font-size: 100%;
+  line-height: 1.6;
+  background: #f0f0f0;
+  -webkit-text-size-adjust: none;
+  color: #444;
+  text-shadow: 1px 1px #fff;
+}
+#mainContent{
+  width:80%;
+}
+#sideBar{
+  width:19%;
+}
+pre{
+	position: relative;
+	padding: 1em;
+	margin: .5em 0;
+	-webkit-box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
+	-moz-box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
+	box-shadow: -1px 0px 0px 0px #358ccb, 0px 0px 0px 1px #dfdfdf;
+	border-left: 10px solid #358ccb;
+	background-color: #fdfdfd;
+	background-image: -webkit-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
+	background-image: -moz-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
+	background-image: -ms-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
+	background-image: -o-linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
+	background-image: linear-gradient(transparent 50%, rgba(69, 142, 209, 0.04) 50%);
+	background-size: 3em 3em;
+	background-origin: content-box;
+	overflow: visible;
+	max-height: 30em;
+}
+code {
+	margin: 0 0px;
+	padding: 0px 0px;
+	border: 1px solid #eaeaea;
+	border-radius: 3px;
+	color: #2A00FF !important;
+	font-family: Consolas, Helvetica, Arial, Freesans, Clean, Sans-serif;
+	font-size: 75%;
+}

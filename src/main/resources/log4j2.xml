@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!-- status=debug 可以查看log4j的装配过程 -->  
+<configuration status="off" monitorInterval="1800">  
+    <properties>  
+        <property name="LOG_HOME">log</property>  
+        <!-- 日志备份目录 -->  
+        <property name="BACKUP_HOME">${LOG_HOME}/backup</property>  
+        <property name="app">webframe</property>  
+    </properties>  
+	<!--定义所有的appender-->
+    <appenders>
+        <!--这个输出控制台的配置-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!--输出日志的格式-->
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread] [%file:%line] - %msg%n"/>
+        </Console>
+        <!--文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定，这个也挺有用的，适合临时测试用-->
+        <File name="warn" fileName="${LOG_HOME}/${app}-warn.log" append="false">
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread] [%file:%line] - %msg%n"/>
+        </File>
+
+        <!--这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="RollingFile" fileName="${LOG_HOME}/${app}.log"
+                     filePattern="${BACKUP_HOME}/%date{yyyy-MM}/${app}-%date{yyyy-MM-dd}-%i.log.gz">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread] [%file:%line] - %msg%n"/>
+            <Policies>
+	            <!-- 每72小时压缩一次 -->
+	            <!-- 
+	            <TimeBasedTriggeringPolicy interval="72" modulate="true"/>
+	            -->
+	            <SizeBasedTriggeringPolicy size="10MB"/>
+	        </Policies>
+        </RollingFile>
+    </appenders>
+    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
+    <loggers>
+        <!--建立一个默认的root的logger-->
+        <root level="trace">
+            <appender-ref ref="RollingFile"/>
+            <appender-ref ref="Console"/>
+            <appender-ref ref="warn"/>
+        </root>
+    </loggers>
+</configuration>
