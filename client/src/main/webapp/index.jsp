@@ -3,10 +3,10 @@
 <html>
 <body>
 <shiro:guest>
-    欢迎游客访问，<a href="${pageContext.request.contextPath}/cas-login">点击登录</a><br/>
+    欢迎游客访问，<a href="${pageContext.request.contextPath}/login">点击登录</a><br/>
 </shiro:guest>
 <shiro:user>
-    欢迎[<shiro:principal/>]登录<br/>
+    欢迎[<shiro:principal/>]登录 <br/> <a href="${pageContext.request.contextPath}/logout">点击登出</a><br/>
 </shiro:user>
 <shiro:hasRole name="admin">
     您有角色admin

@@ -27,8 +27,10 @@
         <property name="authenticationCacheName" value="authenticationCache"/>
         <property name="authorizationCachingEnabled" value="true"/>
         <property name="authorizationCacheName" value="authorizationCache"/>
-        <property name="casServerUrlPrefix" value="http://localhost:8090/cas-server"/>
-        <property name="casService" value="http://localhost:8090/cas-client/cas"/>
+        <!--该地址为cas server地址 -->
+        <property name="casServerUrlPrefix" value="${shiro.casServer.url}"/>
+        <!-- 该地址为client 的访问地址    下面配置的cas  filter -->  
+        <property name="casService" value="${shiro.client.cas}"/>
     </bean>
 
     <!--<bean id="casRealm" class="org.apache.shiro.cas.CasRealm">-->
@@ -79,13 +81,13 @@
 
     <!-- 会话验证调度器 -->
     <bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
-        <property name="sessionValidationInterval" value="1800000"/>
+        <property name="sessionValidationInterval" value="${shiro.session.validate.timespan}"/>
         <property name="sessionManager" ref="sessionManager"/>
     </bean>
 
     <!-- 会话管理器 -->
     <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-        <property name="globalSessionTimeout" value="1800000"/>
+        <property name="globalSessionTimeout" value="${shiro.session.timeout}"/>
         <property name="deleteInvalidSessions" value="true"/>
         <property name="sessionValidationSchedulerEnabled" value="true"/>
         <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
@@ -111,17 +113,22 @@
     </bean>
 
     <bean id="casFilter" class="org.apache.shiro.cas.CasFilter">
-        <property name="failureUrl" value="/casFailure.jsp"/>
+        <!--配置验证错误时的失败页面（Ticket 校验不通过时展示的错误页面） -->
+        <property name="failureUrl" value="${shiro.failureUrl}"/>
     </bean>
-
+	<bean id="logoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+	    <property name="redirectUrl" value="${shiro.logout.url}"/>
+	</bean>
+	
     <!-- Shiro的Web过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <property name="loginUrl" value="http://localhost:8090/cas-server?service=http://localhost:8090/cas-client/cas"/>
-        <property name="successUrl" value="/"/>
+        <property name="loginUrl" value="${shiro.login.url}"/>
+        <property name="successUrl" value="${shiro.login.success.url}"/>
         <property name="filters">
             <util:map>
                 <entry key="cas" value-ref="casFilter"/>
+                <entry key="logout" value-ref="logoutFilter" />
             </util:map>
         </property>
         <property name="filterChainDefinitions">
