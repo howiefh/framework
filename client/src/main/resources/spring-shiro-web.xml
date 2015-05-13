@@ -27,8 +27,8 @@
         <property name="authenticationCacheName" value="authenticationCache"/>
         <property name="authorizationCachingEnabled" value="true"/>
         <property name="authorizationCacheName" value="authorizationCache"/>
-        <property name="casServerUrlPrefix" value="https://localhost:8443/chapter14-server"/>
-        <property name="casService" value="https://localhost:9443/chapter14-client/cas"/>
+        <property name="casServerUrlPrefix" value="http://localhost:8090/cas-server"/>
+        <property name="casService" value="http://localhost:8090/cas-client/cas"/>
     </bean>
 
     <!--<bean id="casRealm" class="org.apache.shiro.cas.CasRealm">-->
@@ -117,7 +117,7 @@
     <!-- Shiro的Web过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <property name="loginUrl" value="https://localhost:8443/chapter14-server/login?service=https://localhost:9443/chapter14-client/cas"/>
+        <property name="loginUrl" value="http://localhost:8090/cas-server?service=http://localhost:8090/cas-client/cas"/>
         <property name="successUrl" value="/"/>
         <property name="filters">
             <util:map>

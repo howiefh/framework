@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
 
     Licensed to Jasig under one or more contributor license
@@ -18,9 +19,19 @@
     under the License.
 
 --%>
-<%@ page language="java"  session="false" %>
+<jsp:directive.include file="includes/top.jsp" />
 
-<%
-final String queryString = request.getQueryString();
-final String url = request.getContextPath() + "/login" + (queryString != null ? "?" + queryString : "");
-response.sendRedirect(response.encodeURL(url));%>
+<div id="msg" class="warn">
+  <h2>Authentication Succeeded with Warnings</h2>
+
+<c:forEach items="${messages}" var="message">
+  <p class="message">${message.text}</p>
+</c:forEach>
+
+</div>
+
+<div id="big-buttons">
+ <a class="button" href="login?execution=${flowExecutionKey}&_eventId=proceed">Continue</a>
+</div>
+
+<jsp:directive.include file="includes/bottom.jsp" />
