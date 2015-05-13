@@ -1,5 +1,8 @@
-.settings/
-log/
-target/
-.project
-.classpath
+server/.classpath
+server/.project
+server/target/
+server/.settings/
+client/.classpath
+client/.project
+client/target/
+client/.settings/
