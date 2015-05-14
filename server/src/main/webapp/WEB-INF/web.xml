@@ -189,6 +189,92 @@
     <servlet-name>cas</servlet-name>
     <url-pattern>/authorizationFailure.html</url-pattern>
   </servlet-mapping>
+  
+  <!-- 验证码 -->
+  <servlet>
+    <servlet-name>kaptcha</servlet-name>
+    <servlet-class>com.google.code.kaptcha.servlet.KaptchaServlet</servlet-class>
+    <init-param>
+      <param-name>kaptcha.border</param-name>
+      <param-value>no</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.border.color</param-name>
+      <param-value>red</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.border.thickness</param-name>
+      <param-value>5</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.image.width</param-name>
+      <param-value>85</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.image.height</param-name>
+      <param-value>30</param-value>
+    </init-param>
+     <init-param>
+      <param-name>kaptcha.textproducer.char.space</param-name>
+      <param-value>5</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.producer.impl</param-name>
+      <param-value>com.google.code.kaptcha.impl.DefaultKaptcha</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.textproducer.impl</param-name>
+      <param-value>com.google.code.kaptcha.text.impl.DefaultTextCreator</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.textproducer.char.string</param-name>
+      <param-value>1234567890</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.textproducer.char.length</param-name>
+      <param-value>4</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.textproducer.font.names</param-name>
+      <param-value>Consolas,Arial,Courier</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.textproducer.font.size</param-name>
+      <param-value>23</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.textproducer.font.color</param-name>
+      <param-value>black</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.noise.impl</param-name>
+      <param-value>com.google.code.kaptcha.impl.NoNoise</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.noise.color</param-name>
+      <param-value>black</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.obscurificator.impl</param-name>
+      <param-value>com.google.code.kaptcha.impl.ShadowGimpy</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.background.impl</param-name>
+      <param-value>com.google.code.kaptcha.impl.DefaultBackground</param-value>
+    </init-param>
+      <init-param>
+      <param-name>kaptcha.background.clear.from</param-name>
+      <param-value>211,236,230</param-value>
+    </init-param>
+    <init-param>
+      <param-name>kaptcha.background.clear.to</param-name>
+      <param-value>211,237,228</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>kaptcha</servlet-name>
+    <url-pattern>/captcha.jpg</url-pattern>
+  </servlet-mapping>
 
   <session-config>
     <!-- Default to 5 minute session timeouts -->

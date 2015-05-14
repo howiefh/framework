@@ -24,7 +24,10 @@
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
                           http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
 
+	<!--
     <var name="credential" class="org.jasig.cas.authentication.UsernamePasswordCredential" />
+    -->
+    <var name="credential" class="io.github.howiefh.cas.authentication.UsernamePasswordCaptchaCredential" />
     <on-start>
         <evaluate expression="initialFlowSetupAction" />
     </on-start>
@@ -85,14 +88,22 @@
         <binder>
             <binding property="username" />
             <binding property="password" />
+            <!-- 验证码 -->
+            <binding property="captcha" />
         </binder>
         <on-entry>
             <set name="viewScope.commandName" value="'credential'" />
         </on-entry>
-		<transition on="submit" bind="true" validate="true" to="realSubmit">
+		<transition on="submit" bind="true" validate="true" to="validatorCaptcha">
             <evaluate expression="authenticationViaFormAction.doBind(flowRequestContext, flowScope.credential)" />
         </transition>
 	</view-state>
+	<!-- 添加一个 validatorCaptcha 校验验证码的操作 -->
+    <action-state id="validatorCaptcha">
+        <evaluate expression="authenticationViaFormAction.validatorCaptcha(flowRequestContext, flowScope.credential, messageContext)"></evaluate>
+        <transition on="error" to="generateLoginTicket" />
+        <transition on="success" to="realSubmit" />
+    </action-state>
 
   <action-state id="realSubmit">
     <evaluate expression="authenticationViaFormAction.submit(flowRequestContext, flowScope.credential, messageContext)" />
