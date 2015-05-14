@@ -6,3 +6,4 @@ client/.classpath
 client/.project
 client/target/
 client/.settings/
+*.log

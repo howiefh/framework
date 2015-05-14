@@ -47,6 +47,7 @@
     <mockito.version>1.9.5</mockito.version>
     <joda-time.version>2.2</joda-time.version>
     <cas-server-security-filter.version>2.0.0</cas-server-security-filter.version>
+    <mysql-connector-java.version>5.1.25</mysql-connector-java.version>
   </properties>
   <groupId>org.jasig.cas</groupId>
   <artifactId>cas-server</artifactId>
@@ -400,6 +401,17 @@
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jasig.cas</groupId>
+      <artifactId>cas-server-support-jdbc</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql-connector-java.version}</version>
+        </dependency>
     <dependency>
       <groupId>org.jasig.cas</groupId>
       <artifactId>cas-server-support-generic</artifactId>
