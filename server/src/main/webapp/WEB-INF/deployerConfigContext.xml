@@ -127,23 +127,36 @@
     </bean>
     -->
     <!-- 自定义数据库鉴权 -->
-	<bean id="primaryAuthenticationHandler" class="org.jasig.cas.adaptors.jdbc.QueryDatabaseAuthenticationHandler">
-	    <property name="dataSource" ref="dataSource"/>
-	    <property name="sql"  value="${auth.sql}"/>
-	    <property name="passwordEncoder" ref="MD5PasswordEncoder"/>
+	<bean id="primaryAuthenticationHandler" class="io.github.howiefh.cas.authentication.UnlockedUserQueryDBAuthenticationHandler">
+		<constructor-arg ref="dataSource" index="0"></constructor-arg>
+		<constructor-arg value="${auth.sql}" index="1"></constructor-arg> 
+		<constructor-arg value="MD5" index="2"></constructor-arg> 
 	</bean>
 	
 	<!-- 数据源 -->
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"> 
         <property name="driverClassName" value="${dataSource.driver}"></property>  
         <property name="url" value="${dataSource.url}"/>  
         <property name="username" value="${dataSource.username}"/>
         <property name="password" value="${dataSource.password}"/>
+        
+        <property name="maxActive" value="${dataSource.maxActive}" />  
+        <property name="initialSize" value="${dataSource.initialSize}" />  
+        <property name="maxWait" value="${dataSource.maxWait}" />  
+        <property name="minIdle" value="${dataSource.minIdle}" />  
+  
+        <property name="timeBetweenEvictionRunsMillis" value="${dataSource.timeBetweenEvictionRunsMillis}" />  
+        <property name="minEvictableIdleTimeMillis" value="${dataSource.minEvictableIdleTimeMillis}" />  
+  
+        <property name="validationQuery" value="${dataSource.validationQuery}" />  
+        <property name="testWhileIdle" value="${dataSource.testWhileIdle}" />  
+        <property name="testOnBorrow" value="${dataSource.testOnBorrow}" />  
+        <property name="testOnReturn" value="${dataSource.testOnReturn}" />  
+        <property name="maxOpenPreparedStatements" value="${dataSource.maxOpenPreparedStatements}" />  
+        <property name="removeAbandoned" value="${dataSource.removeAbandoned}" /> <!-- 打开removeAbandoned功能 -->  
+        <property name="removeAbandonedTimeout" value="${dataSource.removeAbandonedTimeout}" /> <!-- 1800秒，也就是30分钟 -->  
+        <property name="logAbandoned" value="${dataSource.logAbandoned}" /> <!-- 关闭abanded连接时输出错误日志 -->  
     </bean>  
-    <!-- MD5加密 -->
-	<bean id="MD5PasswordEncoder" class="org.jasig.cas.authentication.handler.DefaultPasswordEncoder">
-	    <constructor-arg value="MD5"/>
-	</bean>  
 
     <!-- Required for proxy ticket mechanism -->
     <bean id="proxyPrincipalResolver"

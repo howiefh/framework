@@ -48,6 +48,8 @@
     <joda-time.version>2.2</joda-time.version>
     <cas-server-security-filter.version>2.0.0</cas-server-security-filter.version>
     <mysql-connector-java.version>5.1.25</mysql-connector-java.version>
+    <druid.version>0.2.23</druid.version>
+    <shiro.version>1.2.2</shiro.version>
   </properties>
   <groupId>org.jasig.cas</groupId>
   <artifactId>cas-server</artifactId>
@@ -408,6 +410,11 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+       <groupId>com.alibaba</groupId>
+       <artifactId>druid</artifactId>
+       <version>${druid.version}</version>
+    </dependency>
+    <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql-connector-java.version}</version>
@@ -417,6 +424,11 @@
       <artifactId>cas-server-support-generic</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.shiro</groupId>
+        <artifactId>shiro-core</artifactId>
+        <version>${shiro.version}</version>
     </dependency>
     <!--
     <dependency>
