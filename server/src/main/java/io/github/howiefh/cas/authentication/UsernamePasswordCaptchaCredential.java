@@ -3,10 +3,10 @@ package io.github.howiefh.cas.authentication;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.jasig.cas.authentication.UsernamePasswordCredential;
+import org.jasig.cas.authentication.RememberMeUsernamePasswordCredential;
 
 public class UsernamePasswordCaptchaCredential extends
-		UsernamePasswordCredential {
+		RememberMeUsernamePasswordCredential{
 
 	/**
 	 * 

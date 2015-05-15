@@ -61,12 +61,13 @@
     </section>
     <section class="row">
           <label for="captcha"><spring:message code="screen.welcome.label.captcha" /></label>
-          <form:input cssClass="required" cssErrorClass="error" id="captcha" size="25" tabindex="3"  path="captcha" autocomplete="off" htmlEscape="true" />
+	      <spring:message code="screen.welcome.label.captcha.accesskey" var="captchaAccessKey" />
+          <form:input cssClass="required" cssErrorClass="error" id="captcha" size="25" tabindex="3"  path="captcha"  accesskey="${captchaAccessKey}" autocomplete="off" htmlEscape="true" />
           <img alt="必须输入验证码" src="captcha.jpg" onclick="this.src='captcha.jpg?'+Math.random();">
     </section>
     <section class="row check">
-      <input id="warn" name="warn" value="true" tabindex="3" accesskey="<spring:message code="screen.welcome.label.warn.accesskey" />" type="checkbox" />
-      <label for="warn"><spring:message code="screen.welcome.label.warn" /></label>
+      <input id="rememberMe" name="rememberMe" value="false" tabindex="4" accesskey="<spring:message code="screen.welcome.label.rememberMe.accesskey" />" type="checkbox" />
+      <label for="rememberMe"><spring:message code="screen.welcome.label.rememberMe" /></label>
     </section>
     
     <section class="row btn-row">
@@ -74,8 +75,8 @@
       <input type="hidden" name="execution" value="${flowExecutionKey}" />
       <input type="hidden" name="_eventId" value="submit" />
 
-      <input class="btn-submit" name="submit" accesskey="l" value="<spring:message code="screen.welcome.button.login" />" tabindex="4" type="submit" />
-      <input class="btn-reset" name="reset" accesskey="c" value="<spring:message code="screen.welcome.button.clear" />" tabindex="5" type="reset" />
+      <input class="btn-submit" name="submit" accesskey="l" value="<spring:message code="screen.welcome.button.login" />" tabindex="5" type="submit" />
+      <input class="btn-reset" name="reset" accesskey="c" value="<spring:message code="screen.welcome.button.clear" />" tabindex="6" type="reset" />
     </section>
   </form:form>
 </div>

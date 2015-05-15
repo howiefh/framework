@@ -90,6 +90,8 @@
             <binding property="password" />
             <!-- 验证码 -->
             <binding property="captcha" />
+            <!-- 记住我 -->
+            <binding property="rememberMe" />
         </binder>
         <on-entry>
             <set name="viewScope.commandName" value="'credential'" />
