@@ -21,12 +21,39 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
       </div> <!-- END #content -->
+      </div> <!-- END #main -->
       
       <footer>
         <div id="copyright">
-          <p><spring:message code="copyright" /></p>
-          <p>Powered by <a href="http://www.jasig.org/cas">Jasig Central Authentication Service <%=org.jasig.cas.CasVersion.getVersion()%></a></p>
+		  <div id="list-languages">
+		    <%final String queryString = request.getQueryString() == null ? "" : request.getQueryString().replaceAll("&locale=([A-Za-z][A-Za-z]_)?[A-Za-z][A-Za-z]|^locale=([A-Za-z][A-Za-z]_)?[A-Za-z][A-Za-z]", "");%>
+		    <c:set var='query' value='<%=queryString%>' />
+		    <c:set var="xquery" value="${fn:escapeXml(query)}" />
+		      
+	        <c:choose>
+		      <c:when test="${not empty requestScope['isMobile'] and not empty mobileCss}">
+		        <form method="get" action="login?${xquery}">
+		          <select name="locale">
+		            <option value="en">English</option>
+		            <option value="zh_CN"><spring:message code="screen.welcome.zh" /></option>
+		          </select>
+		          <input type="submit" value="Switch">
+		        </form>
+		      </c:when>
+		      <c:otherwise>
+		        <c:set var="loginUrl" value="login?${xquery}${not empty xquery ? '&' : ''}locale=" />
+		        <ul>
+		          <li class="first"><a href="${loginUrl}en">English</a></li>
+		          <li><a href="${loginUrl}zh_CN"><spring:message code="screen.welcome.zh" /></a></li>
+		        </ul>
+		      </c:otherwise>
+		    </c:choose>
+		  </div>
         </div>
+          
+        <p><spring:message code="copyright" /></p>
+        <p>Powered by <a href="http://www.jasig.org/cas">Jasig Central Authentication Service <%=org.jasig.cas.CasVersion.getVersion()%></a></p>
+		    
       </footer>
 
     </div> <!-- END #container -->

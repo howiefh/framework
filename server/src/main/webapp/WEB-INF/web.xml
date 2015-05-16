@@ -208,11 +208,11 @@
     </init-param>
     <init-param>
       <param-name>kaptcha.image.width</param-name>
-      <param-value>85</param-value>
+      <param-value>112</param-value>
     </init-param>
     <init-param>
       <param-name>kaptcha.image.height</param-name>
-      <param-value>30</param-value>
+      <param-value>42</param-value>
     </init-param>
      <init-param>
       <param-name>kaptcha.textproducer.char.space</param-name>

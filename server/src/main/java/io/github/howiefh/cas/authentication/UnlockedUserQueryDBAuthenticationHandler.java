@@ -3,6 +3,7 @@ package io.github.howiefh.cas.authentication;
 import java.security.GeneralSecurityException;
 import java.util.Map;
 
+import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.FailedLoginException;
 import javax.sql.DataSource;
@@ -102,7 +103,7 @@ public class UnlockedUserQueryDBAuthenticationHandler extends
             final String digestedPassword = digestEncodedPassword(transformedCredential.getPassword(), values);
 
             if (Boolean.TRUE.equals(values.get(this.lockedFieldName))) {
-                throw new FailedLoginException(username + " is disabled.");
+                throw new AccountLockedException(username + " is disabled.");
             }
             if (!values.get(this.passwordFieldName).equals(digestedPassword)) {
                 throw new FailedLoginException("Password does not match value on record.");
