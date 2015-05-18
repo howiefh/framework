@@ -127,7 +127,7 @@
     </bean>
     -->
     <!-- 自定义数据库鉴权 -->
-	<bean id="primaryAuthenticationHandler" class="io.github.howiefh.cas.authentication.UnlockedUserQueryDBAuthenticationHandler">
+	<bean id="primaryAuthenticationHandler" class="io.github.howiefh.cas.authentication.ValidUserQueryDBAuthenticationHandler">
 		<constructor-arg ref="dataSource" index="0"></constructor-arg>
 		<constructor-arg value="${auth.sql}" index="1"></constructor-arg> 
 		<constructor-arg value="MD5" index="2"></constructor-arg> 

@@ -15,6 +15,7 @@ import org.apache.shiro.crypto.hash.DefaultHashService;
 import org.apache.shiro.crypto.hash.HashRequest;
 import org.apache.shiro.util.ByteSource;
 import org.jasig.cas.adaptors.jdbc.AbstractJdbcUsernamePasswordAuthenticationHandler;
+import org.jasig.cas.authentication.AccountDisabledException;
 import org.jasig.cas.authentication.HandlerResult;
 import org.jasig.cas.authentication.PreventedException;
 import org.jasig.cas.authentication.UsernamePasswordCredential;
@@ -22,12 +23,13 @@ import org.jasig.cas.authentication.principal.SimplePrincipal;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
-public class UnlockedUserQueryDBAuthenticationHandler extends
+public class ValidUserQueryDBAuthenticationHandler extends
 		AbstractJdbcUsernamePasswordAuthenticationHandler{
     private static final String DEFAULT_PASSWORD_FIELD = "password";
     private static final String DEFAULT_SALT_FIELD = "salt";
     private static final String DEFAULT_NUM_ITERATIONS_FIELD = "numIterations";
     private static final String DEFAULT_LOCKED_FIELD = "locked";
+    private static final String DEFAULT_DISABLED_FIELD = "disabled";
     /**
      * The Algorithm name.
      */
@@ -59,6 +61,12 @@ public class UnlockedUserQueryDBAuthenticationHandler extends
     protected String numberOfIterationsFieldName = DEFAULT_NUM_ITERATIONS_FIELD;
     
     /**
+     * The disabled field name.
+     */
+    @NotNull
+    protected String disabledFieldName = DEFAULT_DISABLED_FIELD;
+    
+    /**
      * The locked field name.
      */
     @NotNull
@@ -84,7 +92,7 @@ public class UnlockedUserQueryDBAuthenticationHandler extends
      * @param algorithmName the algorithm name (i.e. <code>MessageDigestAlgorithms.SHA_512</code>)
      */
 
-    public UnlockedUserQueryDBAuthenticationHandler(final DataSource datasource,
+    public ValidUserQueryDBAuthenticationHandler(final DataSource datasource,
                                                        final String sql,
                                                        final String algorithmName) {
         super();
@@ -100,11 +108,15 @@ public class UnlockedUserQueryDBAuthenticationHandler extends
 
         try {
             final Map<String, Object> values = getJdbcTemplate().queryForMap(this.sql, username);
-            final String digestedPassword = digestEncodedPassword(transformedCredential.getPassword(), values);
 
-            if (Boolean.TRUE.equals(values.get(this.lockedFieldName))) {
-                throw new AccountLockedException(username + " is disabled.");
+            if (Boolean.TRUE.equals(values.get(this.disabledFieldName))) {
+                throw new AccountDisabledException(username + "  has been disabled.");
             }
+            if (Boolean.TRUE.equals(values.get(this.lockedFieldName))) {
+                throw new AccountLockedException(username + "  has been locked.");
+            }
+            
+            final String digestedPassword = digestEncodedPassword(transformedCredential.getPassword(), values);
             if (!values.get(this.passwordFieldName).equals(digestedPassword)) {
                 throw new FailedLoginException("Password does not match value on record.");
             }
@@ -217,6 +229,14 @@ public class UnlockedUserQueryDBAuthenticationHandler extends
         this.numberOfIterationsFieldName = numberOfIterationsFieldName;
     }
 
+    /**
+     * Sets disabled field name. Default is {@link #DEFAULT_DISABLED_FIELD}.
+     *
+     * @param disabledFieldName the disabled field name
+     */
+    public final void setDisabledFieldName(final String disabledFieldName) {
+        this.disabledFieldName = disabledFieldName;
+    }
     /**
      * Sets locked field name. Default is {@link #DEFAULT_LOCKED_FIELD}.
      *
