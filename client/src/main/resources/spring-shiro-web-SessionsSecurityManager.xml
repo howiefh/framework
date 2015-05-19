@@ -6,6 +6,21 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
+	<!-- 下面的配置用于单点退出，该过滤器用于实现单点登出功能，需要添加到web.xml。同时更新spring-beans.xml末尾更新import-->
+	<!--
+	<listener>
+	    <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
+	</listener>
+	<filter>
+	    <filter-name>CAS Single Sign Out Filter</filter-name>
+	    <filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>CAS Single Sign Out Filter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	-->
+	
     <!-- 缓存管理器 使用Ehcache实现 -->
     <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
         <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
@@ -51,14 +66,6 @@
     <!-- 会话ID生成器 -->
     <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
 
-    <!-- 会话Cookie模板 -->
-    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-    <!-- sid如果改为JSESSIONID会导致重定向循环 -->
-        <constructor-arg value="sid"/>
-        <property name="httpOnly" value="true"/>
-        <property name="maxAge" value="-1"/>
-    </bean>
-
     <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
         <constructor-arg value="rememberMe"/>
         <property name="httpOnly" value="true"/>
@@ -73,28 +80,7 @@
         <property name="cookie" ref="rememberMeCookie"/>
     </bean>
 
-    <!-- 会话DAO -->
-    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
-        <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>
-        <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
-    </bean>
-
-    <!-- 会话验证调度器 -->
-    <bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
-        <property name="sessionValidationInterval" value="${shiro.session.validate.timespan}"/>
-        <property name="sessionManager" ref="sessionManager"/>
-    </bean>
-
-    <!-- 会话管理器 -->
-    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-        <property name="globalSessionTimeout" value="${shiro.session.timeout}"/>
-        <property name="deleteInvalidSessions" value="true"/>
-        <property name="sessionValidationSchedulerEnabled" value="true"/>
-        <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
-        <property name="sessionDAO" ref="sessionDAO"/>
-        <property name="sessionIdCookieEnabled" value="true"/>
-        <property name="sessionIdCookie" ref="sessionIdCookie"/>
-    </bean>
+    <!-- 会话管理器默认使用SessionsSecurityManager -->
 
 	<!-- In CAS server, you can have "remember me" support. This information is pushed through SAML validation or CAS customized validation.
 	To reflect the CAS-remember me status in Shiro, you have to define a specific CasSubjectFactory in your Shiro configuration
@@ -103,7 +89,6 @@
     <!-- 安全管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="casRealm"/>
-        <property name="sessionManager" ref="sessionManager"/>
         <property name="cacheManager" ref="cacheManager"/>
         <property name="rememberMeManager" ref="rememberMeManager"/>
         <property name="subjectFactory" ref="casSubjectFactory"/>
@@ -119,9 +104,6 @@
         <!--配置验证错误时的失败页面（Ticket 校验不通过时展示的错误页面） -->
         <property name="failureUrl" value="${shiro.failureUrl}"/>
     </bean>
-	<bean id="casLogoutFilter" class="io.github.howiefh.cas.session.CasLogoutFilter">
-        <property name="sessionManager" ref="sessionManager"/>
-	</bean>
 	<bean id="logoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
 	    <property name="redirectUrl" value="${shiro.logout.url}"/>
 	</bean>
@@ -135,15 +117,14 @@
             <util:map>
                 <entry key="cas" value-ref="casFilter"/>
                 <entry key="logout" value-ref="logoutFilter" />
-                <entry key="casLogout" value-ref="casLogoutFilter" />
             </util:map>
         </property>
         <property name="filterChainDefinitions">
             <value>
                 /casFailure.jsp = anon
-                /cas = casLogout,cas
+                /cas = cas
                 /logout = logout
-                /** = casLogout,user
+                /** = user
             </value>
         </property>
     </bean>
