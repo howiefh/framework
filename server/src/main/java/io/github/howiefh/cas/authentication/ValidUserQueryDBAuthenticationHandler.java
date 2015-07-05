@@ -23,8 +23,7 @@ import org.jasig.cas.authentication.principal.SimplePrincipal;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
-public class ValidUserQueryDBAuthenticationHandler extends
-		AbstractJdbcUsernamePasswordAuthenticationHandler{
+public class ValidUserQueryDBAuthenticationHandler extends AbstractJdbcUsernamePasswordAuthenticationHandler{
     private static final String DEFAULT_PASSWORD_FIELD = "password";
     private static final String DEFAULT_SALT_FIELD = "salt";
     private static final String DEFAULT_NUM_ITERATIONS_FIELD = "numIterations";

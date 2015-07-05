@@ -27,11 +27,11 @@ public final class SingleSignOutHandler {
 
     /** Parameter name that stores logout request */
     private String logoutParameterName = "logoutRequest";
-    
+
     private HashMapBackedSessionMappingStorage storage = new HashMapBackedSessionMappingStorage();
 
     protected SingleSignOutHandler(){
-    	init();
+        init();
     }
     /**
      * @param name Name of the authentication token parameter.
@@ -57,7 +57,7 @@ public final class SingleSignOutHandler {
         CommonUtils.assertNotNull(this.artifactParameterName, "artifactParameterName cannot be null.");
         CommonUtils.assertNotNull(this.logoutParameterName, "logoutParameterName cannot be null.");
     }
-    
+
     /**
      * Determines whether the given request contains an authentication token.
      *
@@ -87,7 +87,7 @@ public final class SingleSignOutHandler {
      * @param request HTTP request containing an authentication token.
      */
     public void recordSession(final HttpServletRequest request) {
-    	Session session = SecurityUtils.getSubject().getSession();
+        Session session = SecurityUtils.getSubject().getSession();
 
         final String token = CommonUtils.safeGetParameter(request, this.artifactParameterName);
         if (log.isDebugEnabled()) {
@@ -96,7 +96,7 @@ public final class SingleSignOutHandler {
 
         storage.addSessionById(token, session);
     }
-   
+
     /**
      * 从logoutRequest参数中解析出token，根据token获取到sessionID，再根据sessionID获取到session，设置logoutRequest参数为true
      * 从而标记此session已经失效。
@@ -108,25 +108,25 @@ public final class SingleSignOutHandler {
         if (log.isTraceEnabled()) {
             log.trace ("Logout request:\n" + logoutMessage);
         }
-        
+
         final String token = XmlUtils.getTextForElement(logoutMessage, "SessionIndex");
         if (CommonUtils.isNotBlank(token)) {
-        	Serializable sessionId = storage.getSessionIDByMappingId(token);
-        	if (sessionId!=null) {
-	        	try {
-	        		Session session = sessionManager.getSession(new DefaultSessionKey(sessionId));
-	        		if(session != null) {
-		        		//设置会话的logoutParameterName 属性表示无效了，这里直接使用了request的参数名
-		        		session.setAttribute(logoutParameterName, true);
-		                if (log.isDebugEnabled()) {
-		                    log.debug ("Invalidating session [" + sessionId + "] for token [" + token + "]");
-		                }
-	        		}
-	        	} catch (Exception e) {
-	        		
-	        	}
+            Serializable sessionId = storage.getSessionIDByMappingId(token);
+            if (sessionId!=null) {
+                try {
+                    Session session = sessionManager.getSession(new DefaultSessionKey(sessionId));
+                    if(session != null) {
+                        //设置会话的logoutParameterName 属性表示无效了，这里直接使用了request的参数名
+                        session.setAttribute(logoutParameterName, true);
+                        if (log.isDebugEnabled()) {
+                            log.debug ("Invalidating session [" + sessionId + "] for token [" + token + "]");
+                        }
+                    }
+                } catch (Exception e) {
+
+                }
             }
-		}
+        }
     }
 
     private boolean isMultipartRequest(final HttpServletRequest request) {
