@@ -33,7 +33,7 @@ public class FreeMarkerDemo {
 		root.put("File", fileStatics);
 		root.put("date", new Date());
 		root.put("enums", BeansWrapper.getDefaultInstance().getEnumModels());
-		root.put("person", new Person(1, "Jack"));
+		root.put("person", new Person(1, "Jack", new ArrayList<Person>()));
 		root.put("test", new Test("Tom"));
 		root.put("indexOf", new IndexOfMethod());
 		root.put("upper", new UpperDirective());

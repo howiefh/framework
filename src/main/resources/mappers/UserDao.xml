@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.howiefh.mybatis.dao.UserDao">
+    <resultMap id="BaseResultMap" type="io.github.howiefh.mybatis.entity.User">
+        <id column="u_id" property="id" jdbcType="BIGINT" />
+        <result column="u_username" property="username" jdbcType="VARCHAR" />
+        <result column="u_password" property="password" jdbcType="VARCHAR" />
+        <result column="u_salt" property="salt" jdbcType="VARCHAR" />
+        <result column="u_email" property="email" jdbcType="VARCHAR" />
+        <result column="u_mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="u_photo" property="photo" jdbcType="VARCHAR" />
+        <result column="u_login_ip" property="loginIp" jdbcType="VARCHAR" />
+        <result column="u_login_date" property="loginDate" jdbcType="TIMESTAMP" />
+        <result column="u_locked" property="locked" jdbcType="BIT" />
+        <result column="u_created_at" property="createdAt" jdbcType="TIMESTAMP" />
+        <result column="u_updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+        <association property="createdBy" javaType="io.github.howiefh.mybatis.entity.User">
+            <id property="id" column="u_created_by"/>
+        </association>
+        <association property="updatedBy" javaType="io.github.howiefh.mybatis.entity.User">
+            <id property="id" column="u_updated_by"/>
+        </association>
+    </resultMap>
+
+    <sql id="userColumns">
+        u.id u_id,
+        u.username u_username,
+        u.password u_password,
+        u.salt u_salt,
+        u.email u_email,
+        u.mobile u_mobile,
+        u.photo u_photo,
+        u.login_ip u_login_ip,
+        u.login_date u_login_date,
+        u.locked u_locked,
+        u.created_by u_created_by,
+        u.created_at u_created_at,
+        u.updated_by u_updated_by,
+        u.updated_at u_updated_at
+    </sql>
+
+    <sql id="userWhere">
+        <where>
+            <if test="param.username != null and param.username != ''">
+                u.username like
+                CONCAT('%', #{param.username}, '%')
+            </if>
+            <if test="param.email != null and param.email != ''">
+                and u.email like
+                CONCAT('%', #{param.email}, '%')
+            </if>
+            <if test="param.mobile != null and param.mobile != ''">
+                and u.mobile like
+                CONCAT('%', #{param.mobile}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <!-- 加keyProperty和useGenerateKeys属性可以使返回主键值 -->
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="io.github.howiefh.mybatis.entity.User">
+        insert
+        into sys_user (id, username, password,
+        salt, email, mobile,
+        photo, login_ip, login_date, locked,
+        created_by, created_at, updated_by, updated_at)
+        values (
+        #{id,jdbcType=BIGINT},
+        #{username,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR},
+        #{salt,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR},
+        #{mobile,jdbcType=VARCHAR},
+        #{photo,jdbcType=VARCHAR},
+        #{loginIp,jdbcType=VARCHAR},
+        #{loginDate,jdbcType=TIMESTAMP},
+        #{locked,jdbcType=BIT},
+        #{createdBy.id,jdbcType=BIGINT},
+        #{createdAt,jdbcType=TIMESTAMP},
+        #{updatedBy.id,jdbcType=BIGINT},
+        #{updatedAt,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <select id="findOne" resultMap="BaseResultMap">
+        select
+        <include refid="userColumns" />
+        from sys_user u
+        where u.id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="countBy" resultType="long">
+        select count(0) from sys_user u
+        <include refid="userWhere"/>
+    </select>
+
+    <select id="count" resultType="long">
+        select count(0) from sys_user
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="userColumns" />
+        from sys_user u
+    </select>
+
+    <select id="findPage" resultMap="BaseResultMap">
+        select
+        <include refid="userColumns" />
+        from sys_user u
+        limit #{page.offset}, #{page.pageSize}
+    </select>
+
+    <select id="findPageByHelper" resultMap="BaseResultMap">
+        select
+        <include refid="userColumns" />
+        from sys_user u
+    </select>
+
+    <select id="findPageBy" resultMap="BaseResultMap">
+        select
+        <include refid="userColumns" />
+        from sys_user u
+        <include refid="userWhere"/>
+        limit #{page.offset}, #{page.pageSize}
+    </select>
+
+    <select id="findByName" resultMap="BaseResultMap">
+        select
+        <include refid="userColumns" />
+        from sys_user u
+        where u.username = #{username}
+    </select>
+
+    <update id="update" parameterType="io.github.howiefh.mybatis.entity.User">
+        update sys_user
+        <set>
+            <if test="username != null">username=#{username},</if>
+            <if test="password != null">password=#{password},</if>
+            <if test="salt != null">salt=#{salt},</if>
+            <if test="email != null">email=#{email},</if>
+            <if test="mobile != null">mobile=#{mobile},</if>
+            <if test="photo != null">photo=#{photo},</if>
+            <if test="loginIp != null">login_ip=#{loginIp},</if>
+            <if test="loginDate != null">login_date=#{loginDate},</if>
+            <if test="locked!= null">locked=#{locked},</if>
+            <if test="updatedBy != null">updated_by =#{updatedBy.id},</if>
+            <if test="updatedAt != null">updated_at=#{updatedAt},</if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from sys_user
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteBatch" parameterType="java.util.List">
+        delete from sys_user
+        where id in
+        <foreach item="item" index="index" collection="ids" open="("
+                 separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>
